@@ -1,0 +1,241 @@
+<R2>dis CU
+#
+ version 7.1.064, Release 0707P05
+#
+ sysname R2
+#
+ router id 2.1.1.15
+#
+ospf 1
+ area 0.0.0.0
+  network 95.0.0.252 0.0.0.3
+  network 95.2.2.0 0.0.0.255
+  network 95.2.3.0 0.0.0.255
+#
+ ip unreachables enable
+ ip ttl-expires enable
+#
+ dhcp enable
+ dhcp server always-broadcast
+#
+ dns proxy enable
+#
+ password-recovery enable
+#
+vlan 1
+#
+dhcp server ip-pool lan1
+ gateway-list 192.168.0.1
+ network 192.168.0.0 mask 255.255.254.0
+ address range 192.168.1.2 192.168.1.254
+ dns-list 192.168.0.1
+#
+controller Cellular0/0
+#
+interface Serial1/0
+ ip address 95.0.0.254 255.255.255.252
+#
+interface Serial1/1
+#
+interface NULL0
+#
+interface Vlan-interface1
+ ip address 192.168.0.1 255.255.254.0
+ tcp mss 1280
+#
+interface GigabitEthernet0/0
+ port link-mode route
+ ip address 95.2.2.15 255.255.255.0
+#
+interface GigabitEthernet0/1
+ port link-mode route
+ ip address 95.2.3.15 255.255.255.0
+#
+interface GigabitEthernet0/2
+ port link-mode route
+#
+interface GigabitEthernet0/27
+ port link-mode route
+#
+interface GigabitEthernet0/28
+ port link-mode route
+#
+interface GigabitEthernet0/3
+ port link-mode bridge
+#
+interface GigabitEthernet0/4
+ port link-mode bridge
+#
+interface GigabitEthernet0/5
+ port link-mode bridge
+#
+interface GigabitEthernet0/6
+ port link-mode bridge
+#
+interface GigabitEthernet0/7
+ port link-mode bridge
+#
+interface GigabitEthernet0/8
+ port link-mode bridge
+#
+interface GigabitEthernet0/9
+ port link-mode bridge
+#
+interface GigabitEthernet0/10
+ port link-mode bridge
+#
+interface GigabitEthernet0/11
+ port link-mode bridge
+#
+interface GigabitEthernet0/12
+ port link-mode bridge
+#
+interface GigabitEthernet0/13
+ port link-mode bridge
+#
+interface GigabitEthernet0/14
+ port link-mode bridge
+#
+interface GigabitEthernet0/15
+ port link-mode bridge
+#
+interface GigabitEthernet0/16
+ port link-mode bridge
+#
+interface GigabitEthernet0/17
+ port link-mode bridge
+#
+interface GigabitEthernet0/18
+ port link-mode bridge
+#
+interface GigabitEthernet0/19
+ port link-mode bridge
+#
+interface GigabitEthernet0/20
+ port link-mode bridge
+#
+interface GigabitEthernet0/21
+ port link-mode bridge
+#
+interface GigabitEthernet0/22
+ port link-mode bridge
+#
+interface GigabitEthernet0/23
+ port link-mode bridge
+#
+interface GigabitEthernet0/24
+ port link-mode bridge
+#
+interface GigabitEthernet0/25
+ port link-mode bridge
+#
+interface GigabitEthernet0/26
+ port link-mode bridge
+#
+bgp 2
+ peer 95.0.0.253 as-number 1
+ peer 95.2.2.16 as-number 2
+ peer 95.2.2.17 as-number 2
+ peer 95.2.2.18 as-number 2
+ peer 95.2.3.17 as-number 2
+ peer 95.2.3.18 as-number 2
+ #
+ address-family ipv4 unicast
+  import-route ospf 1
+  peer 95.0.0.253 enable
+  peer 95.2.2.16 enable
+  peer 95.2.2.17 enable
+  peer 95.2.2.18 enable
+  peer 95.2.3.17 enable
+  peer 95.2.3.18 enable
+#
+ scheduler logfile size 16
+#
+line class console
+ user-role network-admin
+#
+line class tty
+ user-role network-operator
+#
+line class vty
+ user-role network-operator
+#
+line con 0
+ user-role network-admin
+#
+line vty 0 63
+ authentication-mode scheme
+ user-role network-operator
+#
+ password-control enable
+ undo password-control aging enable
+ undo password-control history enable
+ password-control length 6
+ password-control login-attempt 3 exceed lock-time 10
+ password-control update-interval 0
+ password-control login idle-time 0
+ password-control complexity user-name check
+#
+domain system
+#
+ domain default enable system
+#
+role name level-0
+ description Predefined level-0 role
+#
+role name level-1
+ description Predefined level-1 role
+#
+role name level-2
+ description Predefined level-2 role
+#
+role name level-3
+ description Predefined level-3 role
+#
+role name level-4
+ description Predefined level-4 role
+#
+role name level-5
+ description Predefined level-5 role
+#
+role name level-6
+ description Predefined level-6 role
+#
+role name level-7
+ description Predefined level-7 role
+#
+role name level-8
+ description Predefined level-8 role
+#
+role name level-9
+ description Predefined level-9 role
+#
+role name level-10
+ description Predefined level-10 role
+#
+role name level-11
+ description Predefined level-11 role
+#
+role name level-12
+ description Predefined level-12 role
+#
+role name level-13
+ description Predefined level-13 role
+#
+role name level-14
+ description Predefined level-14 role
+#
+user-group system
+#
+local-user admin class manage
+ service-type telnet http
+ authorization-attribute user-role network-admin
+#
+ ip http enable
+#
+wlan global-configuration
+#
+wlan ap-group default-group
+ vlan 1
+#
+return
