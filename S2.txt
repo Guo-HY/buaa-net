@@ -9,10 +9,14 @@
  undo irf link-delay
  irf member 1 priority 1
 #
+ router id 2.1.1.16
+#
 ospf 1
+ import-route bgp 2
  area 0.0.0.0
-  network 95.0.0.248 0.0.0.3
-  network 95.2.2.0 0.0.0.255
+  network 2.1.1.16 0.0.0.0
+  network 95.2.0.0 0.0.255.255
+  network 192.168.2.16 0.0.0.0
 #
  ip unreachables enable
  ip ttl-expires enable
@@ -27,7 +31,15 @@ vlan 10
 #
 vlan 20
 #
+vlan 29
+#
 interface NULL0
+#
+interface LoopBack0
+ ip address 2.1.1.16 255.255.255.255
+#
+interface LoopBack1
+ ip address 192.168.2.16 255.255.255.255
 #
 interface Vlan-interface10
  ip address 95.2.2.16 255.255.255.0
@@ -107,22 +119,33 @@ interface GigabitEthernet1/0/28
 interface M-GigabitEthernet0/0/0
 #
 bgp 2
+ group as2 internal
+ peer as2 connect-interface LoopBack0
+ peer 2.1.1.15 group as2
+ peer 2.1.1.17 group as2
+ peer 2.1.1.18 group as2
  peer 95.0.0.249 as-number 1
- peer 95.2.2.15 as-number 2
- peer 95.2.2.17 as-number 2
- peer 95.2.2.18 as-number 2
- peer 95.2.3.15 as-number 2
- peer 95.2.3.17 as-number 2
- peer 95.2.3.18 as-number 2
  #
  address-family ipv4 unicast
+  peer as2 enable
+  peer as2 next-hop-local
   peer 95.0.0.249 enable
-  peer 95.2.2.15 enable
-  peer 95.2.2.17 enable
-  peer 95.2.2.18 enable
-  peer 95.2.3.15 enable
-  peer 95.2.3.17 enable
-  peer 95.2.3.18 enable
+#
+route-policy import_bgp permit node 10
+ if-match ip address prefix-list permit_snmp_out
+#
+route-policy import_ospf permit node 10
+ if-match ip address prefix-list permit_snmp_in
+#
+ ip prefix-list permit_export index 10 permit 192.168.126.242 32
+ ip prefix-list permit_export index 20 permit 192.168.2.0 24
+ ip prefix-list permit_export index 30 permit 95.4.10.0 24
+ ip prefix-list permit_export index 40 permit 95.4.11.0 24
+ ip prefix-list permit_export index 50 permit 95.4.12.0 24
+ ip prefix-list permit_export index 60 permit 95.4.13.0 24
+ ip prefix-list permit_snmp_in index 10 permit 192.168.2.0 24
+ ip prefix-list permit_snmp_out index 10 permit 192.168.1.0 24
+ ip prefix-list permit_snmp_out index 20 permit 192.168.3.0 24
 #
  scheduler logfile size 16
 #
@@ -196,3 +219,4 @@ role name level-14
 user-group system
 #
 return
+<S2>
